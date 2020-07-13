@@ -23,7 +23,7 @@ class Brackets {
                     return 0
                 }
             }
-        }
+        }  
         return if (stack.isEmpty()) {
             1
         } else {
