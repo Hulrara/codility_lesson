@@ -1,7 +1,5 @@
-package codility_lesson
-
 fun main() {
-    print(Peak().solution(intArrayOf(1, 2, 3, 4, 3, 4, 1, 2, 3, 4, 4, 2)))
+    print(Peak().solution(intArrayOf(1, 2, 3, 4, 3, 4, 1, 2, 3, 4, 6, 2)))
 }
 
 class Peak {
@@ -27,10 +25,15 @@ class Peak {
                 if (peak[current] <= index) {
                     current += 1
                 } else {
-                    count += 1
+                    if (peak[current] <= (count + 1) * (A.size / i)) {
+                        count += 1
+                        current += 1
+                    }else{
+                        break
+                    }
                 }
             }
-            if (count  == i) {
+            if (count == i) {
                 return i
             }
         }
