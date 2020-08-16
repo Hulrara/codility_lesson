@@ -1,13 +1,5 @@
 fun main() {
     println(NailingPlanks().solution(intArrayOf(1, 4, 5, 8), intArrayOf(4, 5, 9, 10), intArrayOf(4, 6, 7, 10, 2)))
-
-    println(
-        NailingPlanks().solution(
-            intArrayOf(1, 4, 7, 10, 12),
-            intArrayOf(3, 6, 9, 12, 14),
-            intArrayOf(12, 2, 5, 8)
-        )
-    )
 }
 
 class NailingPlanks {
@@ -17,47 +9,57 @@ class NailingPlanks {
 
         var result = -1
         for (zip in AtoB) {
-            result = minNailedValue(zip, C.sortedArray(), CtoIndex,result)
-            if (result==-1){
+            result = minNailedValue(zip, CtoIndex, result)
+            if (result == -1) {
                 return -1
             }
         }
         return result + 1
     }
 
-    fun minNailedValue(AtoB: Pair<Int, Int>, C: IntArray, CtoIndex: List<Pair<Int, Int>>, before: Int): Int {
-        var low = AtoB.first
-        var high = AtoB.second
-
+    fun minNailedValue(AtoB: Pair<Int, Int>, CtoIndex: List<Pair<Int, Int>>, before: Int): Int {
+        val len = CtoIndex.size
+        var low = 0
+        var high = len - 1
+        //lower bound 로 박을 수 있는 못중 가장 작은 index 찾기
         while (low <= high) {
             val mid = (low + high) / 2
-            if (C.firstOrNull { it in low..mid } != null){
-                high = mid - 1
-            } else {
-                low = mid + 1
+            val key = CtoIndex[mid].first
+            when {
+                key < AtoB.first -> {
+                    low = mid + 1
+                }
+                key > AtoB.second -> {
+                    high = mid - 1
+                }
+                else -> {
+                    high = mid - 1
+                }
             }
         }
 
-        if (low > AtoB.second) {
+        if (low >= len) {
             return -1
         }
-        var pos = CtoIndex.indexOfFirst { it.first == low }
+        var value = CtoIndex[low].first
+
+        if (value > AtoB.second) {
+            return -1
+        }
         var result = Int.MAX_VALUE
-        var value = low
 
-
-        while (value <= AtoB.second && pos < CtoIndex.size) {
-            val index = CtoIndex[pos].second
+        // 박을 수 있은 못 중 가장 작은 index 찾기
+        while (value <= AtoB.second && low < len) {
+            val index = CtoIndex[low].second
             if (index <= before) {
                 return before
             }
             result = Math.min(result, index)
-            pos++
-            if (pos < CtoIndex.size) {
-                value = CtoIndex[pos].first
+            low += 1
+            if (low < len) {
+                value = CtoIndex[low].first
             }
         }
         return result
     }
-
 }
